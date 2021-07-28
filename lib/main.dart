@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
 
 void main() => runApp(MyApp());
 
@@ -9,10 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Oblique Strategies',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(fontFamily: 'SanFrancisco'),
       home: MyAppScreen(),
     );
   }
@@ -27,6 +27,8 @@ class MyAppScreen extends StatefulWidget {
 
 class MyAppScreenState extends State<MyAppScreen> {
   List<String> _strategies = [];
+  final _random = new Random();
+  var strategy;
 
   Future<List<String>> _loadStrategies() async {
     List<String> strategies = [];
@@ -54,20 +56,35 @@ class MyAppScreenState extends State<MyAppScreen> {
     });
   }
 
+  randomListItem(List lst) => lst[_random.nextInt(lst.length)];
+
+  String generateRandomStrategy() {
+    return randomListItem(_strategies);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Oblique Strategies")),
-      body: Center(
-        child: Container(
-          child: ListView.builder(
-            itemCount: _strategies.length,
-            itemBuilder: (context, index) {
-              return Text(_strategies[index]);
-            },
-          ),
-        ),
-      ),
-    );
+    return MaterialApp(
+        home: Scaffold(
+            body: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  setState(() {
+                    generateRandomStrategy();
+                  });
+                },
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Center(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Text(generateRandomStrategy(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                  )))),
+                    ]))));
   }
 }

@@ -1,4 +1,4 @@
-package com.example.oblique_strategies
+package com.obliquestrategies.app
 
 import io.flutter.embedding.android.FlutterActivity
 
